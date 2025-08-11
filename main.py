@@ -76,9 +76,10 @@ class MyPlugin(Star):
             yield event.chain_result(chain)
         else:
             del code[qq]
+            yield event.chain_result([Comp.Plain(f"删除 {qq} 成功")])
         with open("code.json", "w") as f:
             json.dump(code, f)
-        yield event.chain_result([Comp.Plain(f"删除 {qq} 成功")])
+        
 
 
     @filter.permission_type(filter.PermissionType.ADMIN)
@@ -88,11 +89,12 @@ class MyPlugin(Star):
             code = json.load(f)
         length = len(code)
         num = random.randint(0, length - 1)
+        info = code.items()[num]
         chain = [
-            Comp.At(qq=code[num].key), # At 消息发送者
+            Comp.At(qq=info[0]), # At 消息发送者
             Comp.Plain("恭喜你中奖了"),
             #中奖信息
-            Comp.Plain(f"用户名：{code[num].value}"),
+            Comp.Plain(f"用户名：{info[1]}"),
         ]
         yield event.chain_result(chain)
 
