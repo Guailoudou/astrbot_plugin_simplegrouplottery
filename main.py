@@ -96,6 +96,7 @@ class MyPlugin(Star):
             Comp.Plain(f"恭喜你中奖了"),
             Comp.Face(id=144),
             Comp.Plain(f"\n中奖信息：\nQQ号：{info[0]}\n用户名：{info[1]}"),
+            Comp.Image.fromURL("https://file.gldhn.top/img/1721313589276slitu2.png"),
         ]
         yield event.chain_result(chain)
 
