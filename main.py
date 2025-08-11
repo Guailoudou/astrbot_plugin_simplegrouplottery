@@ -75,7 +75,7 @@ class MyPlugin(Star):
             ]
             yield event.chain_result(chain)
         else:
-            code.remove(qq)
+            del code[qq]
         with open("code.json", "w") as f:
             json.dump(code, f)
         yield event.chain_result([Comp.Plain(f"删除 {qq} 成功")])
