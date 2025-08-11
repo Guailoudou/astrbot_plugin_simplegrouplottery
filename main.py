@@ -91,10 +91,10 @@ class MyPlugin(Star):
         num = random.randint(0, length - 1)
         info = list(code.items())[num]
         chain = [
-            Comp.At(qq=info[0]), # At 消息发送者
-            Comp.Plain("恭喜你中奖了"),
+            Comp.At(qq=info[0]), 
+            Comp.Plain("恭喜你中奖了\n中奖信息：\n"),
             #中奖信息
-            Comp.Plain(f"用户名：{info[1]}"),
+            Comp.Plain(f"QQ号：{info[0]}用户名：{info[1]}"),
         ]
         yield event.chain_result(chain)
 
