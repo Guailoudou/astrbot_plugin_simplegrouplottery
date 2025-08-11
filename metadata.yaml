@@ -1,5 +1,5 @@
 name: getcod # 这是你的插件的唯一识别名。
 desc: 这是 AstrBot 的插件，用于获取计算信息。 # 插件简短描述
-version: v0.0.7 # 插件版本号。格式：v1.1.1 或者 v1.1
+version: v0.0.8 # 插件版本号。格式：v1.1.1 或者 v1.1
 author: Guailoudou # 作者
 repo: https://github.com/Guailoudou/astrbot_plugin_getcode # 插件的仓库地址

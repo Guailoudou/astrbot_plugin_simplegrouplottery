@@ -89,7 +89,7 @@ class MyPlugin(Star):
             code = json.load(f)
         length = len(code)
         num = random.randint(0, length - 1)
-        info = code.items()[num]
+        info = list(code.items())[num]
         chain = [
             Comp.At(qq=info[0]), # At 消息发送者
             Comp.Plain("恭喜你中奖了"),
