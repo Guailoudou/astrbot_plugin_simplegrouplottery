@@ -92,7 +92,10 @@ class MyPlugin(Star):
         info = list(code.items())[num]
         chain = [
             Comp.At(qq=info[0]), 
-            Comp.Plain(f"恭喜你中奖了\n中奖信息：\nQQ号：{info[0]}\n用户名：{info[1]}"),
+            Comp.Face(id=144),
+            Comp.Plain(f"恭喜你中奖了"),
+            Comp.Face(id=144),
+            Comp.Plain(f"\n中奖信息：\nQQ号：{info[0]}\n用户名：{info[1]}"),
         ]
         yield event.chain_result(chain)
 
