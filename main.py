@@ -2,9 +2,9 @@ from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
 from astrbot.api.star import Context, Star, register
 from astrbot.api import logger
 import astrbot.api.message_components as Comp
-import os,json,random,time
+import os,json,random,time,asyncio
 @register("simplegrouplottery", "Guailoudou", "一个简单的 群抽奖 插件", "1.0.0")
-class MyPlugin(Star):
+class LotteryPlugin(Star):
     def __init__(self, context: Context):
         super().__init__(context)
 
@@ -71,13 +71,19 @@ class MyPlugin(Star):
             yield event.chain_result([Comp.Plain(f"删除 {qq} 成功")])
         with open("code.json", "w") as f:
             json.dump(code, f)
-        
+
+    
     @filter.command("timeout")
     async def timeout(self, event: AstrMessageEvent,times: int):
-        yield event.chain_result([Comp.Plain(f"开始等待{times}秒")])
-        time.sleep(times)
-        yield event.chain_result([Comp.Plain(f"已等待{times}秒")])
+        # async def timed_task(event: AstrMessageEvent,times: int):
+        #     await asyncio.sleep(times)
+        #     yield event.chain_result([Comp.Plain(f"已等待{times}秒")])
 
+        yield event.chain_result([Comp.Plain(f"1开始等待{times}秒")])
+        await asyncio.sleep(times)
+        yield event.chain_result([Comp.Plain(f"已等待{times}秒")])
+        # task = asyncio.create_task(timed_task(event,times))
+    
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("开始抽奖")
     async def start(self, event: AstrMessageEvent):
