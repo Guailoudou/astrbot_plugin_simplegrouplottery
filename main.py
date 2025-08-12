@@ -2,7 +2,7 @@ from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
 from astrbot.api.star import Context, Star, register
 from astrbot.api import logger
 import astrbot.api.message_components as Comp
-import os,json,random
+import os,json,random,time
 @register("simplegrouplottery", "Guailoudou", "一个简单的 群抽奖 插件", "1.0.0")
 class MyPlugin(Star):
     def __init__(self, context: Context):
@@ -35,14 +35,6 @@ class MyPlugin(Star):
                 json.dump(code, f)
 
         yield event.plain_result(f"用户{message_obj.sender.user_id}参与成功") # 发送一条纯文本消息
-
-    # @filter.command("getfile")
-    # async def getfile(self, event: AstrMessageEvent):
-    #     """获取数据文件"""
-    #     chain = [
-    #         Comp.File(file="code.json", name="code.json")
-    #     ]
-    #     yield event.chain_result(chain)
 
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("getqqs")
@@ -80,7 +72,11 @@ class MyPlugin(Star):
         with open("code.json", "w") as f:
             json.dump(code, f)
         
-
+    @filter.command("timeout")
+    async def timeout(self, event: AstrMessageEvent,times: int):
+        yield event.chain_result([Comp.Plain(f"开始等待{times}秒")])
+        time.sleep(times)
+        yield event.chain_result([Comp.Plain(f"已等待{times}秒")])
 
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("开始抽奖")
@@ -95,10 +91,12 @@ class MyPlugin(Star):
             Comp.Face(id=144),
             Comp.Plain(f"恭喜你中奖了"),
             Comp.Face(id=144),
-            Comp.Plain(f"\n中奖信息：\nQQ号：{info[0]}\n用户名：{info[1]}"),
+            Comp.Plain(f" \n中奖信息：\nQQ号：{info[0]}\n用户名：{info[1]}"),
             Comp.Image.fromURL("https://file.gldhn.top/img/1721313589276slitu2.png"),
         ]
         yield event.chain_result(chain)
 
     async def terminate(self):
         """可选择实现异步的插件销毁方法，当插件被卸载/停用时会调用。"""
+        #删除文件
+        os.remove("code.json")
