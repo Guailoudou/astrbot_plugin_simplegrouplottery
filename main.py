@@ -82,6 +82,7 @@ class LotteryPlugin(Star):
             await asyncio.sleep(times)
         except asyncio.CancelledError:
             return
+        print("已等待{}秒".format(times))
         await LotteryPlugin.start()
         # yield event.chain_result([Comp.Plain(f"1开始等待{times}秒")])
         # await asyncio.sleep(times)
@@ -91,7 +92,7 @@ class LotteryPlugin(Star):
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("开始抽奖")
     async def start(self, event: AstrMessageEvent,times: int):
-        
+        event.plain_result("开始抽奖")
         with open("code.json", "r") as f:
             code = json.load(f)
         length = len(code)
@@ -106,12 +107,14 @@ class LotteryPlugin(Star):
             Comp.Image.fromURL("https://file.gldhn.top/img/1721313589276slitu2.png"),
         ]
         yield event.chain_result(chain)
+
+
     task = None
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("定时抽奖")
     async def timestart(self, event: AstrMessageEvent,times: int):
         global task
-        task = asyncio.create_task(LotteryPlugin.timeout(self, event,times))
+        task = asyncio.create_task()
         yield event.plain_result(f"已开始定时抽奖，请等待{times}秒")
     
         
