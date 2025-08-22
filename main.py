@@ -89,10 +89,10 @@ class LotteryPlugin(Star):
         # yield event.chain_result([Comp.Plain(f"已等待{times}秒")])
         # task = asyncio.create_task(timed_task(event,times))
     
-    @filter.permission_type(filter.PermissionType.ADMIN)
-    @filter.command("开始抽奖")
+    # @filter.permission_type(filter.PermissionType.ADMIN)
+    # @filter.command("开始抽奖")
     async def start(self, event: AstrMessageEvent,times: int):
-        event.plain_result("开始抽奖")
+        logger.info("开始抽奖")
         with open("code.json", "r") as f:
             code = json.load(f)
         length = len(code)
