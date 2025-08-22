@@ -86,9 +86,9 @@ class LotteryPlugin(Star):
             with open("msggroup.json", "r") as f:
                 msgg = json.load(f)
             for i in msgg:
-                await self.context.send_message(chain,i)
+                await self.context.send_message(i,chain)
             if event.unified_msg_origin not in msgg:
-                await self.context.send_message(chain,event.unified_msg_origin)
+                await self.context.send_message(event.unified_msg_origin,chain)
             return
         logger.info("已等待{}秒".format(times))
         await LotteryPlugin.Lotterystart(self, event)
@@ -119,9 +119,9 @@ class LotteryPlugin(Star):
         with open("msggroup.json", "r") as f:
             msgg = json.load(f)
         for i in msgg:
-            await self.context.send_message(chain,i)
+            await self.context.send_message(i,chain)
         if event.unified_msg_origin not in msgg:
-            await self.context.send_message(chain,event.unified_msg_origin)
+            await self.context.send_message(event.unified_msg_origin,chain)
         # yield event.chain_result(chain)
 
 
