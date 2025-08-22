@@ -11,6 +11,8 @@ class LotteryPlugin(Star):
     async def initialize(self):
         """可选择实现异步的插件初始化方法，当实例化该插件类之后会自动调用该方法。"""
     
+    msgg = []
+    
     # 注册指令的装饰器。指令名为 helloworld。注册成功后，发送 `/helloworld` 就会触发这个指令，并回复 `你好, {user_name}!`
     @filter.command("参与抽奖")
     async def addqq(self, event: AstrMessageEvent):
@@ -81,9 +83,15 @@ class LotteryPlugin(Star):
         try:
             await asyncio.sleep(times)
         except asyncio.CancelledError:
+            chain = event.chain_result([Comp.Plain(f"已取消抽奖")])
+            global msgg
+            for i in msgg:
+                await self.context.send_message(chain,i)
+            if event.unified_msg_origin not in msgg:
+                await self.context.send_message(chain,event.unified_msg_origin)
             return
         logger.info("已等待{}秒".format(times))
-        return LotteryPlugin.Lotterystart(self, event)
+        await LotteryPlugin.Lotterystart(self, event)
         # yield event.chain_result([Comp.Plain(f"1开始等待{times}秒")])
         # await asyncio.sleep(times)
         # yield event.chain_result([Comp.Plain(f"已等待{times}秒")])
@@ -91,10 +99,10 @@ class LotteryPlugin(Star):
     
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("开始抽奖")
-    async def Lotterystart(self, event: AstrMessageEvent,times: int):
+    async def Lotterystart(self, event: AstrMessageEvent):
         logger.info("开始抽奖")
-        yield event.chain_result([Comp.Plain(f"开始等待{times}秒")])
-        await asyncio.sleep(times)
+        # yield event.chain_result([Comp.Plain(f"将在{times}秒")])
+        # await asyncio.sleep(times)
         with open("code.json", "r") as f:
             code = json.load(f)
         length = len(code)
@@ -108,7 +116,12 @@ class LotteryPlugin(Star):
             Comp.Plain(f" \n中奖信息：\nQQ号：{info[0]}\n用户名：{info[1]}"),
             Comp.Image.fromURL("https://file.gldhn.top/img/1721313589276slitu2.png"),
         ]
-        yield event.chain_result(chain)
+        global msgg
+        for i in msgg:
+            await self.context.send_message(chain,i)
+        if event.unified_msg_origin not in msgg:
+            await self.context.send_message(chain,event.unified_msg_origin)
+        # yield event.chain_result(chain)
 
 
     task = None
@@ -120,10 +133,15 @@ class LotteryPlugin(Star):
         global task
         task = asyncio.create_task(LotteryPlugin.timeout(self, event,times))
         yield event.plain_result(f"已开始定时抽奖，请等待{times}秒")
-        result = await task
-        yield result
+        # result = await task
+        # yield result
     
-        
+    @filter.permission_type(filter.PermissionType.ADMIN)
+    @filter.command("setmsggroup")
+    async def setmsggroup(self, event: AstrMessageEvent):
+        global msgg
+        msgg.add(event.unified_msg_origin)
+        yield event.plain_result("已设置该群组为开奖群组")
         
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("取消抽奖")
