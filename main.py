@@ -86,7 +86,12 @@ class LotteryPlugin(Star):
     
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("开始抽奖")
-    async def start(self, event: AstrMessageEvent):
+    async def start(self, event: AstrMessageEvent,times: int):
+        try:
+            await asyncio.sleep(times)
+        except asyncio.CancelledError:
+            yield event.chain_result([Comp.Plain("已取消定时抽将")])
+            return
         with open("code.json", "r") as f:
             code = json.load(f)
         length = len(code)
@@ -101,6 +106,21 @@ class LotteryPlugin(Star):
             Comp.Image.fromURL("https://file.gldhn.top/img/1721313589276slitu2.png"),
         ]
         yield event.chain_result(chain)
+    task = None
+    @filter.permission_type(filter.PermissionType.ADMIN)
+    @filter.command("定时抽奖")
+    async def timestart(self, event: AstrMessageEvent,times: int):
+        global task
+        task = asyncio.create_task(start(self, event,times))
+        yield event.send(f"已开始定时抽奖，请等待{times}秒")
+    
+        
+        
+    @filter.permission_type(filter.PermissionType.ADMIN)
+    @filter.command("取消抽奖")
+    async def stop(self, event: AstrMessageEvent):
+        global task
+        task.cancel()
 
     async def terminate(self):
         """可选择实现异步的插件销毁方法，当插件被卸载/停用时会调用。"""
