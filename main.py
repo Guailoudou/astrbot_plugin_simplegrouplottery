@@ -195,10 +195,10 @@ class LotteryPlugin(Star):
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("getwinlist")
     async def getwinlist(self, event: AstrMessageEvent):
-        with open("getwinlist.json", "r") as f:
-            mgetwinlist = json.load(f)
+        with open("winlist.json", "r") as f:
+            winlist = json.load(f)
         chain = [
-                Comp.Plain(f"{mgetwinlist}")
+                Comp.Plain(f"{winlist}")
             ]
         yield event.chain_result(chain)
     
