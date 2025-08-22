@@ -83,14 +83,14 @@ class LotteryPlugin(Star):
         except asyncio.CancelledError:
             return
         logger.info("已等待{}秒".format(times))
-        await LotteryPlugin.start(self, event)
+        asyncio.create_task(LotteryPlugin.start(self, event))
         # yield event.chain_result([Comp.Plain(f"1开始等待{times}秒")])
         # await asyncio.sleep(times)
         # yield event.chain_result([Comp.Plain(f"已等待{times}秒")])
         # task = asyncio.create_task(timed_task(event,times))
     
-    # @filter.permission_type(filter.PermissionType.ADMIN)
-    # @filter.command("开始抽奖")
+    @filter.permission_type(filter.PermissionType.ADMIN)
+    @filter.command("开始抽奖")
     async def start(self, event: AstrMessageEvent):
         logger.info("开始抽奖")
         with open("code.json", "r") as f:
