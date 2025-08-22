@@ -82,7 +82,7 @@ class LotteryPlugin(Star):
             await asyncio.sleep(times)
         except asyncio.CancelledError:
             return
-        print("已等待{}秒".format(times))
+        logger.info("已等待{}秒".format(times))
         await LotteryPlugin.start()
         # yield event.chain_result([Comp.Plain(f"1开始等待{times}秒")])
         # await asyncio.sleep(times)
@@ -113,7 +113,7 @@ class LotteryPlugin(Star):
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("定时抽奖")
     async def timestart(self, event: AstrMessageEvent,times: int):
-        print(times)
+        logger.info(times)
         global task
         task = asyncio.create_task(LotteryPlugin.timeout(self, event,times))
         yield event.plain_result(f"已开始定时抽奖，请等待{times}秒")
