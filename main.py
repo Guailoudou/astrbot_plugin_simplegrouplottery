@@ -75,7 +75,7 @@ class LotteryPlugin(Star):
     
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("rmgroup")
-    async def rmqq(self, event: AstrMessageEvent):
+    async def rmgroup(self, event: AstrMessageEvent):
         """删除all开奖源群"""
         with open("msggroup.json", "w") as f:
             json.dump([], f)
