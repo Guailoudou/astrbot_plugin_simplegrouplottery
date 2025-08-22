@@ -83,7 +83,7 @@ class LotteryPlugin(Star):
             await asyncio.sleep(times)
         except asyncio.CancelledError:
             chain = event.chain_result([Comp.Plain(f"已取消抽奖")])
-            with open("code.json", "r") as f:
+            with open("msggroup.json", "r") as f:
                 msgg = json.load(f)
             for i in msgg:
                 await self.context.send_message(chain,i)
@@ -116,7 +116,7 @@ class LotteryPlugin(Star):
             Comp.Plain(f" \n中奖信息：\nQQ号：{info[0]}\n用户名：{info[1]}"),
             Comp.Image.fromURL("https://file.gldhn.top/img/1721313589276slitu2.png"),
         ]
-        with open("code.json", "r") as f:
+        with open("msggroup.json", "r") as f:
             msgg = json.load(f)
         for i in msgg:
             await self.context.send_message(chain,i)
@@ -143,11 +143,11 @@ class LotteryPlugin(Star):
         if not os.path.exists("msggroup.json"):
             with open("msggroup.json", "w") as f:
                 json.dump([], f)
-        with open("code.json", "r") as f:
-            code = json.load(f)
-        code.append(event.unified_msg_origin)
-        with open("code.json", "w") as f:
-            json.dump(code, f)
+        with open("msggroup.json", "r") as f:
+            msgg = json.load(f)
+        msgg.append(event.unified_msg_origin)
+        with open("msggroup.json", "w") as f:
+            json.dump(msgg, f)
         
         yield event.plain_result("已设置该群组为开奖群组")
         
