@@ -73,25 +73,25 @@ class LotteryPlugin(Star):
             json.dump(code, f)
 
     
-    @filter.command("timeout")
+
     async def timeout(self, event: AstrMessageEvent,times: int):
         # async def timed_task(event: AstrMessageEvent,times: int):
         #     await asyncio.sleep(times)
         #     yield event.chain_result([Comp.Plain(f"已等待{times}秒")])
-
-        yield event.chain_result([Comp.Plain(f"1开始等待{times}秒")])
-        await asyncio.sleep(times)
-        yield event.chain_result([Comp.Plain(f"已等待{times}秒")])
+        try:
+            await asyncio.sleep(times)
+        except asyncio.CancelledError:
+            return
+        await LotteryPlugin.start()
+        # yield event.chain_result([Comp.Plain(f"1开始等待{times}秒")])
+        # await asyncio.sleep(times)
+        # yield event.chain_result([Comp.Plain(f"已等待{times}秒")])
         # task = asyncio.create_task(timed_task(event,times))
     
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("开始抽奖")
     async def start(self, event: AstrMessageEvent,times: int):
-        try:
-            await asyncio.sleep(times)
-        except asyncio.CancelledError:
-            yield event.chain_result([Comp.Plain("已取消定时抽将")])
-            return
+        
         with open("code.json", "r") as f:
             code = json.load(f)
         length = len(code)
@@ -111,8 +111,8 @@ class LotteryPlugin(Star):
     @filter.command("定时抽奖")
     async def timestart(self, event: AstrMessageEvent,times: int):
         global task
-        task = asyncio.create_task(LotteryPlugin.start(self, event,times))
-        yield event.send(f"已开始定时抽奖，请等待{times}秒")
+        task = asyncio.create_task(LotteryPlugin.timeout(self, event,times))
+        yield event.plain_result(f"已开始定时抽奖，请等待{times}秒")
     
         
         
@@ -121,6 +121,7 @@ class LotteryPlugin(Star):
     async def stop(self, event: AstrMessageEvent):
         global task
         task.cancel()
+        yield event.plain_result("已取消抽奖")
 
     async def terminate(self):
         """可选择实现异步的插件销毁方法，当插件被卸载/停用时会调用。"""
