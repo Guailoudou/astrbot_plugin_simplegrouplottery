@@ -111,7 +111,7 @@ class LotteryPlugin(Star):
     @filter.command("定时抽奖")
     async def timestart(self, event: AstrMessageEvent,times: int):
         global task
-        task = asyncio.create_task(start(self, event,times))
+        task = asyncio.create_task(LotteryPlugin.start(self, event,times))
         yield event.send(f"已开始定时抽奖，请等待{times}秒")
     
         
