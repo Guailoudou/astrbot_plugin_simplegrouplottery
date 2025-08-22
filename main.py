@@ -79,6 +79,7 @@ class LotteryPlugin(Star):
         """删除all开奖源群"""
         with open("msggroup.json", "w") as f:
             json.dump([], f)
+        yield event.chain_result([Comp.Plain("删除成功")])
 
     
 
