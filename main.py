@@ -141,7 +141,16 @@ class LotteryPlugin(Star):
         # LotteryPlugin.Lotterystart(self, event)
         global task
         task = asyncio.create_task(LotteryPlugin.timeout(self, event,times))
-        yield event.plain_result(f"已开始定时抽奖，请等待{times}秒")
+        # yield event.plain_result(f"已开始定时抽奖，请等待{times}秒")
+        chain = [
+            Comp.Plain(f"已开始定时抽奖，将于{times}秒后开奖"),
+        ]
+        with open("msggroup.json", "r") as f:
+            msgg = json.load(f)
+        for i in msgg:
+            await self.context.send_message(i,event.chain_result(chain))
+        if event.unified_msg_origin not in msgg:
+            await self.context.send_message(event.unified_msg_origin,event.chain_result(chain))
         # result = await task
         # yield result
     
