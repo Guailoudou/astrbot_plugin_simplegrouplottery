@@ -143,6 +143,12 @@ class LotteryPlugin(Star):
             await self.context.send_message(i,event.chain_result(chain))
         if event.unified_msg_origin not in msgg:
             await self.context.send_message(event.unified_msg_origin,event.chain_result(chain))
+        
+        global task
+        if task is not None:
+            task.cancel()
+        task = None
+        
         event.stop_event()
 
 
@@ -205,7 +211,11 @@ class LotteryPlugin(Star):
     @filter.command("取消抽奖")
     async def stop(self, event: AstrMessageEvent):
         global task
+        if task is None:
+            yield event.plain_result("没有进行中的抽奖")
+            return
         task.cancel()
+        task = None
         yield event.plain_result("已取消抽奖")
 
     async def terminate(self):
