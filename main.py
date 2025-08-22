@@ -143,7 +143,7 @@ class LotteryPlugin(Star):
             await self.context.send_message(i,event.chain_result(chain))
         if event.unified_msg_origin not in msgg:
             await self.context.send_message(event.unified_msg_origin,event.chain_result(chain))
-        # yield event.chain_result(chain)
+        event.stop_event()
 
 
     task = None
@@ -164,8 +164,7 @@ class LotteryPlugin(Star):
             await self.context.send_message(i,event.chain_result(chain))
         if event.unified_msg_origin not in msgg:
             await self.context.send_message(event.unified_msg_origin,event.chain_result(chain))
-        # result = await task
-        # yield result
+        event.stop_event()
     
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("setmsggroup")
