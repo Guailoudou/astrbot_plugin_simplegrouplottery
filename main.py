@@ -83,7 +83,7 @@ class LotteryPlugin(Star):
         except asyncio.CancelledError:
             return
         logger.info("已等待{}秒".format(times))
-        LotteryPlugin.Lotterystart(self, event)
+        return LotteryPlugin.Lotterystart(self, event)
         # yield event.chain_result([Comp.Plain(f"1开始等待{times}秒")])
         # await asyncio.sleep(times)
         # yield event.chain_result([Comp.Plain(f"已等待{times}秒")])
@@ -106,7 +106,7 @@ class LotteryPlugin(Star):
             Comp.Plain(f" \n中奖信息：\nQQ号：{info[0]}\n用户名：{info[1]}"),
             Comp.Image.fromURL("https://file.gldhn.top/img/1721313589276slitu2.png"),
         ]
-        yield event.chain_result(chain)
+        return event.chain_result(chain)
 
 
     task = None
@@ -114,10 +114,12 @@ class LotteryPlugin(Star):
     @filter.command("定时抽奖")
     async def timestart(self, event: AstrMessageEvent,times: int):
         logger.info(times)
-        LotteryPlugin.Lotterystart(self, event)
+        # LotteryPlugin.Lotterystart(self, event)
         global task
         task = asyncio.create_task(LotteryPlugin.timeout(self, event,times))
         yield event.plain_result(f"已开始定时抽奖，请等待{times}秒")
+        result = await task
+        yield result
     
         
         
