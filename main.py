@@ -151,6 +151,18 @@ class LotteryPlugin(Star):
             json.dump(msgg, f)
         
         yield event.plain_result("已设置该群组为开奖群组")
+
+    @filter.permission_type(filter.PermissionType.ADMIN)
+    @filter.command("getmsggroup")
+    async def getmsggroup(self, event: AstrMessageEvent):
+        with open("msggroup.json", "r") as f:
+            msgg = json.load(f)
+        chain = [
+                Comp.Plain(f"{msgg}")
+            ]
+        
+        
+        yield event.chain_result(chain)
         
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("取消抽奖")
