@@ -135,7 +135,7 @@ class LotteryPlugin(Star):
             "info": info
         })
         with open("winlist.json", "w") as f:
-            json.dump(msgg, f)
+            json.dump(winlist, f)
 
         with open("msggroup.json", "r") as f:
             msgg = json.load(f)
