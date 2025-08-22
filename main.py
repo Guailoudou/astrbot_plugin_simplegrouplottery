@@ -72,6 +72,13 @@ class LotteryPlugin(Star):
             yield event.chain_result([Comp.Plain(f"删除 {qq} 成功")])
         with open("code.json", "w") as f:
             json.dump(code, f)
+    
+    @filter.permission_type(filter.PermissionType.ADMIN)
+    @filter.command("rmgroup")
+    async def rmqq(self, event: AstrMessageEvent):
+        """删除all开奖源群"""
+        with open("msggroup.json", "w") as f:
+            json.dump([], f)
 
     
 
@@ -86,9 +93,9 @@ class LotteryPlugin(Star):
             with open("msggroup.json", "r") as f:
                 msgg = json.load(f)
             for i in msgg:
-                await self.context.send_message(i,chain)
+                await self.context.send_message(i,event.chain_result(chain))
             if event.unified_msg_origin not in msgg:
-                await self.context.send_message(event.unified_msg_origin,chain)
+                await self.context.send_message(event.unified_msg_origin,event.chain_result(chain))
             return
         logger.info("已等待{}秒".format(times))
         await LotteryPlugin.Lotterystart(self, event)
