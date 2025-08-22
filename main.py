@@ -117,6 +117,7 @@ class LotteryPlugin(Star):
         global task
         task = asyncio.create_task(LotteryPlugin.timeout(self, event,times))
         yield event.plain_result(f"已开始定时抽奖，请等待{times}秒")
+        yield event.plain_result("阿巴阿巴")
     
         
         
