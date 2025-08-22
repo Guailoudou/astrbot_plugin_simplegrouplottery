@@ -108,7 +108,8 @@ class LotteryPlugin(Star):
         length = len(code)
         num = random.randint(0, length - 1)
         info = list(code.items())[num]
-        mchain = [
+        m = {}
+        m.chain = [
             Comp.At(qq=info[0]), 
             Comp.Face(id=144),
             Comp.Plain(f"恭喜你中奖了"),
@@ -119,9 +120,9 @@ class LotteryPlugin(Star):
         with open("msggroup.json", "r") as f:
             msgg = json.load(f)
         for i in msgg:
-            await self.context.send_message(i,mchain)
+            await self.context.send_message(i,m)
         if event.unified_msg_origin not in msgg:
-            await self.context.send_message(event.unified_msg_origin,mchain)
+            await self.context.send_message(event.unified_msg_origin,m)
         # yield event.chain_result(chain)
 
 
