@@ -83,7 +83,7 @@ class LotteryPlugin(Star):
         except asyncio.CancelledError:
             return
         logger.info("已等待{}秒".format(times))
-        asyncio.create_task(LotteryPlugin.start(self, event))
+        task = asyncio.create_task(LotteryPlugin.start(self, event))
         # yield event.chain_result([Comp.Plain(f"1开始等待{times}秒")])
         # await asyncio.sleep(times)
         # yield event.chain_result([Comp.Plain(f"已等待{times}秒")])
