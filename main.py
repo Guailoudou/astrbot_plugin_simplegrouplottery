@@ -85,9 +85,9 @@ class LotteryPlugin(Star):
             chain = event.chain_result([Comp.Plain(f"已取消抽奖")])
             with open("msggroup.json", "r") as f:
                 msgg = json.load(f)
-            for i in msgg.g:
+            for i in msgg:
                 await self.context.send_message(chain,i)
-            if event.unified_msg_origin not in msgg.g:
+            if event.unified_msg_origin not in msgg:
                 await self.context.send_message(chain,event.unified_msg_origin)
             return
         logger.info("已等待{}秒".format(times))
@@ -118,9 +118,9 @@ class LotteryPlugin(Star):
         ]
         with open("msggroup.json", "r") as f:
             msgg = json.load(f)
-        for i in msgg.g:
+        for i in msgg:
             await self.context.send_message(chain,i)
-        if event.unified_msg_origin not in msgg.g:
+        if event.unified_msg_origin not in msgg:
             await self.context.send_message(chain,event.unified_msg_origin)
         # yield event.chain_result(chain)
 
@@ -142,11 +142,11 @@ class LotteryPlugin(Star):
     async def setmsggroup(self, event: AstrMessageEvent):
         if not os.path.exists("msggroup.json"):
             with open("msggroup.json", "w") as f:
-                json.dump({"g":[]}, f)
+                json.dump([], f)
         with open("msggroup.json", "r") as f:
             msgg = json.load(f)
         logger.info(msgg)
-        msgg.g.append(event.unified_msg_origin)
+        msgg.append(event.unified_msg_origin)
         with open("msggroup.json", "w") as f:
             json.dump(msgg, f)
         
