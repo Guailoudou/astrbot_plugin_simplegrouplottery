@@ -131,7 +131,7 @@ class LotteryPlugin(Star):
         with open("winlist.json", "r") as f:
             winlist = json.load(f)
         winlist.append({
-            "time": time.time(),
+            "time": time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())),
             "info": info
         })
         with open("winlist.json", "w") as f:
