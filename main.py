@@ -11,7 +11,6 @@ class LotteryPlugin(Star):
     async def initialize(self):
         """可选择实现异步的插件初始化方法，当实例化该插件类之后会自动调用该方法。"""
     
-    msgg = []
     
     # 注册指令的装饰器。指令名为 helloworld。注册成功后，发送 `/helloworld` 就会触发这个指令，并回复 `你好, {user_name}!`
     @filter.command("参与抽奖")
@@ -84,7 +83,8 @@ class LotteryPlugin(Star):
             await asyncio.sleep(times)
         except asyncio.CancelledError:
             chain = event.chain_result([Comp.Plain(f"已取消抽奖")])
-            global msgg
+            with open("code.json", "r") as f:
+                msgg = json.load(f)
             for i in msgg:
                 await self.context.send_message(chain,i)
             if event.unified_msg_origin not in msgg:
@@ -116,7 +116,8 @@ class LotteryPlugin(Star):
             Comp.Plain(f" \n中奖信息：\nQQ号：{info[0]}\n用户名：{info[1]}"),
             Comp.Image.fromURL("https://file.gldhn.top/img/1721313589276slitu2.png"),
         ]
-        global msgg
+        with open("code.json", "r") as f:
+            msgg = json.load(f)
         for i in msgg:
             await self.context.send_message(chain,i)
         if event.unified_msg_origin not in msgg:
@@ -139,8 +140,15 @@ class LotteryPlugin(Star):
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("setmsggroup")
     async def setmsggroup(self, event: AstrMessageEvent):
-        global msgg
-        msgg.add(event.unified_msg_origin)
+        if not os.path.exists("msggroup.json"):
+            with open("msggroup.json", "w") as f:
+                json.dump([], f)
+        with open("code.json", "r") as f:
+            code = json.load(f)
+        code.append(event.unified_msg_origin)
+        with open("code.json", "w") as f:
+            json.dump(code, f)
+        
         yield event.plain_result("已设置该群组为开奖群组")
         
     @filter.permission_type(filter.PermissionType.ADMIN)
