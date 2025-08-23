@@ -126,7 +126,7 @@ class LotteryPlugin(Star):
             Comp.Plain(f"恭喜你中奖了\n-"),
             Comp.Face(id=144),
             Comp.Plain(f" \n中奖信息：\nQQ号：{info[0]}\n用户名：{info[1]}\n奖品：minecraft正版\n请于48小时内联系管理员领取奖品，具体领取方式请查看活动信息"),
-            Comp.Image.fromURL("https://pan.szczk.top/d/6lm7T/0/0600bcb4e4b8f15c81dbda43b5be19ed.png"),
+            Comp.Image.fromURL("https://file.gldhn.top/img/17559596757340600bcb4e4b8f15c81dbda43b5be19ed.png"),
         ]
 
         if not os.path.exists("winlist.json"):
@@ -194,7 +194,7 @@ class LotteryPlugin(Star):
         # yield event.plain_result(f"已开始定时抽奖，请等待{times}秒")
         chain = [
             Comp.Plain(f"已开始抽奖活动，将于{times}秒后开奖\n参与方式：发送 /参与抽奖 \n奖品：minecraft正版一份\n具体领取方式请查看活动信息\nhttps://www.gldhn.top/mc/temp/OPL_HD.html"),
-            Comp.Image.fromURL("https://pan.szczk.top/d/6lm7T/0/0600bcb4e4b8f15c81dbda43b5be19ed.png"),
+            Comp.Image.fromURL("https://file.gldhn.top/img/17559596757340600bcb4e4b8f15c81dbda43b5be19ed.png"),
         ]
         with open("msggroup.json", "r") as f:
             msgg = json.load(f)
