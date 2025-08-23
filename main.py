@@ -91,9 +91,6 @@ class LotteryPlugin(Star):
     
 
     async def timeout(self, event: AstrMessageEvent,times: int):
-        # async def timed_task(event: AstrMessageEvent,times: int):
-        #     await asyncio.sleep(times)
-        #     yield event.chain_result([Comp.Plain(f"已等待{times}秒")])
         try:
             await asyncio.sleep(times)
         except asyncio.CancelledError:
@@ -150,7 +147,9 @@ class LotteryPlugin(Star):
             await self.context.send_message(i,event.chain_result(chain))
         if event.unified_msg_origin not in msgg:
             await self.context.send_message(event.unified_msg_origin,event.chain_result(chain))
-        
+        winorigin = "aiocqhttp:FriendMessage:" + info[0]
+        if winorigin not in msgg:
+            await self.context.send_message(winorigin,event.chain_result(chain))
         # task = LotteryPlugin.task
         if self.task is not None:
             self.task.cancel()
