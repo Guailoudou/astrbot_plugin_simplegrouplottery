@@ -166,10 +166,11 @@ class LotteryPlugin(Star):
         logger.info(times)
         # LotteryPlugin.Lotterystart(self, event)
         # task = LotteryPlugin.task
+        logger.info(self.task)
         if self.task is not None:
             yield event.public_reply("已有定时抽奖任务，如果需要更改时间，请先取消当前任务")
             return
-        
+        logger.info("开始定时抽奖")
         self.task = asyncio.create_task(LotteryPlugin.timeout(self, event,times))
         # yield event.plain_result(f"已开始定时抽奖，请等待{times}秒")
         chain = [
