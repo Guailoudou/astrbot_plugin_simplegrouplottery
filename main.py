@@ -40,7 +40,8 @@ class LotteryPlugin(Star):
             code[qq] = user_name
             with open("code.json", "w") as f:
                 json.dump(code, f)
-
+        if self.task is not None:
+            logger.info("当前存在正在执行的任务")
         yield event.plain_result(f"用户{message_obj.sender.user_id}参与成功") # 发送一条纯文本消息
 
     @filter.permission_type(filter.PermissionType.ADMIN)
@@ -172,7 +173,8 @@ class LotteryPlugin(Star):
         self.task = asyncio.create_task(LotteryPlugin.timeout(self, event,times))
         # yield event.plain_result(f"已开始定时抽奖，请等待{times}秒")
         chain = [
-            Comp.Plain(f"已开始定时抽奖，将于{times}秒后开奖"),
+            Comp.Plain(f"已开始定时抽奖，将于{times}秒后开奖\n参与方式：发送 /参与抽奖 \n奖品：minecraft正版一份"),
+            Comp.Image.fromURL("https://file.gldhn.top/img/1721313589276slitu2.png"),
         ]
         with open("msggroup.json", "r") as f:
             msgg = json.load(f)
