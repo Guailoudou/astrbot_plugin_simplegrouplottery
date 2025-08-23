@@ -5,9 +5,9 @@ import astrbot.api.message_components as Comp
 import os,json,random,time,asyncio
 @register("simplegrouplottery", "Guailoudou", "一个简单的 群抽奖 插件", "1.0.0")
 class LotteryPlugin(Star):
-    task = None
     def __init__(self, context: Context):
         super().__init__(context)
+        self.task = None
 
     async def initialize(self):
         """可选择实现异步的插件初始化方法，当实例化该插件类之后会自动调用该方法。"""
@@ -150,10 +150,10 @@ class LotteryPlugin(Star):
         if event.unified_msg_origin not in msgg:
             await self.context.send_message(event.unified_msg_origin,event.chain_result(chain))
         
-        task = LotteryPlugin.task
-        if task is not None:
-            task.cancel()
-        task = None
+        # task = LotteryPlugin.task
+        if self.task is not None:
+            self.task.cancel()
+        self.task = None
         
         event.stop_event()
 
@@ -164,12 +164,12 @@ class LotteryPlugin(Star):
     async def timestart(self, event: AstrMessageEvent,times: int):
         logger.info(times)
         # LotteryPlugin.Lotterystart(self, event)
-        task = LotteryPlugin.task
-        if task is not None:
+        # task = LotteryPlugin.task
+        if self.task is not None:
             yield event.public_reply("已有定时抽奖任务，如果需要更改时间，请先取消当前任务")
             return
         
-        task = asyncio.create_task(LotteryPlugin.timeout(self, event,times))
+        self.task = asyncio.create_task(LotteryPlugin.timeout(self, event,times))
         # yield event.plain_result(f"已开始定时抽奖，请等待{times}秒")
         chain = [
             Comp.Plain(f"已开始定时抽奖，将于{times}秒后开奖"),
@@ -220,12 +220,12 @@ class LotteryPlugin(Star):
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("取消抽奖")
     async def stop(self, event: AstrMessageEvent):
-        task = LotteryPlugin.task
-        if task is None:
+        # task = LotteryPlugin.task
+        if self.task is None:
             yield event.plain_result("没有进行中的抽奖")
             return
-        task.cancel()
-        task = None
+        self.task.cancel()
+        self.task = None
         yield event.plain_result("已取消抽奖")
 
     async def terminate(self):
