@@ -150,7 +150,7 @@ class LotteryPlugin(Star):
         if event.unified_msg_origin not in msgg:
             await self.context.send_message(event.unified_msg_origin,event.chain_result(chain))
         
-        global task
+        task = LotteryPlugin.task
         if task is not None:
             task.cancel()
         task = None
@@ -164,7 +164,7 @@ class LotteryPlugin(Star):
     async def timestart(self, event: AstrMessageEvent,times: int):
         logger.info(times)
         # LotteryPlugin.Lotterystart(self, event)
-        global task
+        task = LotteryPlugin.task
         if task is not None:
             yield event.public_reply("已有定时抽奖任务，如果需要更改时间，请先取消当前任务")
             return
@@ -220,7 +220,7 @@ class LotteryPlugin(Star):
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("取消抽奖")
     async def stop(self, event: AstrMessageEvent):
-        global task
+        task = LotteryPlugin.task
         if task is None:
             yield event.plain_result("没有进行中的抽奖")
             return
