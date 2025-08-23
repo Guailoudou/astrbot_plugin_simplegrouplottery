@@ -162,8 +162,9 @@ class LotteryPlugin(Star):
     
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("定时抽奖")
-    async def timestart(self, event: AstrMessageEvent,times: int):
+    async def timestart(self, event: AstrMessageEvent,times: float):
         logger.info(times)
+        times = int(times*24*60*60)
         # LotteryPlugin.Lotterystart(self, event)
         # task = LotteryPlugin.task
         logger.info("启动定时抽奖")
