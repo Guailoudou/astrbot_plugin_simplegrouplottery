@@ -14,7 +14,7 @@ class LotteryPlugin(Star):
     
     
     # 注册指令的装饰器。指令名为 helloworld。注册成功后，发送 `/helloworld` 就会触发这个指令，并回复 `你好, {user_name}!`
-    @filter.command("参与抽奖")
+    @filter.command("joinLottery", alias={'参与抽奖', '参加抽奖'})
     async def addqq(self, event: AstrMessageEvent):
         """参加""" # 这是 handler 的描述，将会被解析方便用户了解插件内容。建议填写。
         user_name = event.get_sender_name()
@@ -123,10 +123,10 @@ class LotteryPlugin(Star):
         chain = [
             Comp.At(qq=info[0]), 
             Comp.Face(id=144),
-            Comp.Plain(f"恭喜你中奖了"),
+            Comp.Plain(f"恭喜你中奖了\n-"),
             Comp.Face(id=144),
-            Comp.Plain(f" \n中奖信息：\nQQ号：{info[0]}\n用户名：{info[1]}"),
-            Comp.Image.fromURL("https://file.gldhn.top/img/1721313589276slitu2.png"),
+            Comp.Plain(f" \n中奖信息：\nQQ号：{info[0]}\n用户名：{info[1]}\n奖品：minecraft正版\n请于48小时内联系管理员领取奖品，具体领取方式请查看活动信息"),
+            Comp.Image.fromURL("https://pan.szczk.top/d/6lm7T/0/0600bcb4e4b8f15c81dbda43b5be19ed.png"),
         ]
 
         if not os.path.exists("winlist.json"):
@@ -148,27 +148,27 @@ class LotteryPlugin(Star):
         if event.unified_msg_origin not in msgg:
             await self.context.send_message(event.unified_msg_origin,event.chain_result(chain))
 
-        if event.get_platform_name() == "aiocqhttp":
-        # qq
-            from astrbot.core.platform.sources.aiocqhttp.aiocqhttp_message_event import AiocqhttpMessageEvent
-            assert isinstance(event, AiocqhttpMessageEvent)
-            client = event.bot # 得到 client
-            payloads = {
-                "user_id": info[0],
-                "message": [
-                                {
-                                    "type": "text",
-                                    "data": {
-                                        "text": "你好"
-                                    }
-                                }
-                            ],
-            }
-            ret = await client.api.call_action('send_private_msg', **payloads) # 调用 协议端  API
-            logger.info(f"delete_msg: {ret}")
-        winorigin = "aiocqhttp:FriendMessage:" + info[0]
-        if winorigin not in msgg:
-            await self.context.send_message(winorigin,event.chain_result(chain))
+        # if event.get_platform_name() == "aiocqhttp":
+        # # qq
+        #     from astrbot.core.platform.sources.aiocqhttp.aiocqhttp_message_event import AiocqhttpMessageEvent
+        #     assert isinstance(event, AiocqhttpMessageEvent)
+        #     client = event.bot # 得到 client
+        #     payloads = {
+        #         "user_id": info[0],
+        #         "message": [
+        #                         {
+        #                             "type": "text",
+        #                             "data": {
+        #                                 "text": "你好"
+        #                             }
+        #                         }
+        #                     ],
+        #     }
+        #     ret = await client.api.call_action('send_private_msg', **payloads) # 调用 协议端  API
+        #     logger.info(f"delete_msg: {ret}")
+        #     winorigin = "aiocqhttp:FriendMessage:" + info[0]
+        #     if winorigin not in msgg:
+        #         await self.context.send_message(winorigin,event.chain_result(chain))
 
         if self.task is not None:
             self.task.cancel()
@@ -193,8 +193,8 @@ class LotteryPlugin(Star):
         self.task = asyncio.create_task(LotteryPlugin.timeout(self, event,times))
         # yield event.plain_result(f"已开始定时抽奖，请等待{times}秒")
         chain = [
-            Comp.Plain(f"已开始定时抽奖，将于{times}秒后开奖\n参与方式：发送 /参与抽奖 \n奖品：minecraft正版一份"),
-            Comp.Image.fromURL("https://file.gldhn.top/img/1721313589276slitu2.png"),
+            Comp.Plain(f"已开始抽奖活动，将于{times}秒后开奖\n参与方式：发送 /参与抽奖 \n奖品：minecraft正版一份\n具体领取方式请查看活动信息\nhttps://www.gldhn.top/mc/temp/OPL_HD.html"),
+            Comp.Image.fromURL("https://pan.szczk.top/d/6lm7T/0/0600bcb4e4b8f15c81dbda43b5be19ed.png"),
         ]
         with open("msggroup.json", "r") as f:
             msgg = json.load(f)
