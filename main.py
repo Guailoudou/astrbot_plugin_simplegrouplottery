@@ -5,6 +5,7 @@ import astrbot.api.message_components as Comp
 import os,json,random,time,asyncio
 @register("simplegrouplottery", "Guailoudou", "一个简单的 群抽奖 插件", "1.0.0")
 class LotteryPlugin(Star):
+    task = None
     def __init__(self, context: Context):
         super().__init__(context)
 
@@ -22,6 +23,11 @@ class LotteryPlugin(Star):
         
         qq = message_obj.sender.user_id
         #写入json文件，文件不存在则创建
+        with open("msggroup.json", "r") as f:
+            msgg = json.load(f)
+        if event.unified_msg_origin not in msgg:
+            yield event.plain_result("你没有参与抽奖的权限或不符合参与条件")
+            return
         if not os.path.exists("code.json"):
             with open("code.json", "w") as f:
                 json.dump({}, f)
@@ -152,13 +158,17 @@ class LotteryPlugin(Star):
         event.stop_event()
 
 
-    task = None
+    
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("定时抽奖")
     async def timestart(self, event: AstrMessageEvent,times: int):
         logger.info(times)
         # LotteryPlugin.Lotterystart(self, event)
         global task
+        if task is not None:
+            yield event.public_reply("已有定时抽奖任务，如果需要更改时间，请先取消当前任务")
+            return
+        
         task = asyncio.create_task(LotteryPlugin.timeout(self, event,times))
         # yield event.plain_result(f"已开始定时抽奖，请等待{times}秒")
         chain = [
