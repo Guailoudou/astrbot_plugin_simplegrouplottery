@@ -123,9 +123,10 @@ class LotteryPlugin(Star):
         chain = [
             Comp.At(qq=info[0]), 
             Comp.Face(id=144),
-            Comp.Plain(f"恭喜你中奖了\n-"),
+            Comp.Plain(f"恭喜你中奖了"),
             Comp.Face(id=144),
-            Comp.Plain(f" \n中奖信息：\nQQ号：{info[0]}\n用户名：{info[1]}\n奖品：Minecraft: Java & Bedrock Edition for PC × 1\n请于48小时内联系管理员领取奖品，具体领取方式请查看活动信息"),
+            Comp.Plain(f"\n"),
+            Comp.Plain(f" \n中奖信息：\nQQ号：{info[0]}\n用户名：{info[1]}\n奖品：Minecraft: Java & Bedrock Edition for PC × 1\n请于48小时内联系管理员领取奖品，具体领取方式请查看活动信息\n活动具体规则：https://www.gldhn.top/mc/temp/OPL_HD.html"),
             Comp.Image.fromURL("https://file.gldhn.top/img/17559596757340600bcb4e4b8f15c81dbda43b5be19ed.png"),
         ]
 
