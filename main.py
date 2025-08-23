@@ -147,10 +147,29 @@ class LotteryPlugin(Star):
             await self.context.send_message(i,event.chain_result(chain))
         if event.unified_msg_origin not in msgg:
             await self.context.send_message(event.unified_msg_origin,event.chain_result(chain))
+
+        if event.get_platform_name() == "aiocqhttp":
+        # qq
+            from astrbot.core.platform.sources.aiocqhttp.aiocqhttp_message_event import AiocqhttpMessageEvent
+            assert isinstance(event, AiocqhttpMessageEvent)
+            client = event.bot # 得到 client
+            payloads = {
+                "user_id": info[0],
+                "message": [
+                                {
+                                    "type": "text",
+                                    "data": {
+                                        "text": "你好"
+                                    }
+                                }
+                            ],
+            }
+            ret = await client.api.call_action('send_private_msg', **payloads) # 调用 协议端  API
+            logger.info(f"delete_msg: {ret}")
         winorigin = "aiocqhttp:FriendMessage:" + info[0]
         if winorigin not in msgg:
             await self.context.send_message(winorigin,event.chain_result(chain))
-        # task = LotteryPlugin.task
+
         if self.task is not None:
             self.task.cancel()
         self.task = None
