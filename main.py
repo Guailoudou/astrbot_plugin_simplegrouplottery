@@ -126,6 +126,7 @@ class LotteryPlugin(Star):
 
     async def tick(self):
         """隔1s检查一次是否有过时间但未激活的任务"""
+        await asyncio.sleep(2)
         while True:
             for i in self.task_data:
                 if not i["runned"]:           
@@ -136,7 +137,7 @@ class LotteryPlugin(Star):
                         logger.info("开始执行任务")
                         i["runned"] = True
                         await self.Lotterystart(self)
-                        await self.task_data.clear
+                        await self.task_data={}
                         await self.save("task")
             await asyncio.sleep(2)
 
