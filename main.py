@@ -132,6 +132,7 @@ class LotteryPlugin(Star):
                     if i["time"] < time.time():
                         i["runned"] = True
                         newtime = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
+                        newtime = int(newtime)
                         if i["time"] < newtime:
                             await self.Lotterystart(self)
                             self.task_data.clear
