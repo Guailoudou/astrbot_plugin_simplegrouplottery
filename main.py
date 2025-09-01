@@ -137,9 +137,9 @@ class LotteryPlugin(Star):
                         logger.info("开始执行任务")
                         i["runned"] = True
                         await self.Lotterystart(self)
-                        self.task_data=[]
+                        self.task_data.remove(i)
                         await self.save("task")
-            await asyncio.sleep(2)
+            await asyncio.sleep(1)
 
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("lottery_addgroup")
