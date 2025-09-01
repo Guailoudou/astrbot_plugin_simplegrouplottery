@@ -132,7 +132,6 @@ class LotteryPlugin(Star):
                 if not i["runned"]:           
                     newtime = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
                     newtime = int(newtime)
-                    logger.info(f"newtime:{newtime} time:{i['time']}")
                     if i["time"] < newtime:
                         logger.info("开始执行任务")
                         i["runned"] = True
