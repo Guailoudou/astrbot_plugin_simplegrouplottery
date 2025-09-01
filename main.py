@@ -133,6 +133,7 @@ class LotteryPlugin(Star):
                     newtime = int(newtime)
                     logger.info(f"newtime:{newtime} time:{i['time']}")
                     if i["time"] < newtime:
+                        logger.info("开始执行任务")
                         i["runned"] = True
                         await self.Lotterystart(self)
                         self.task_data.clear
@@ -148,24 +149,24 @@ class LotteryPlugin(Star):
         yield event.plain_result("已设置该群组为开奖群组")
 
 
-    async def timeout(self, event: AstrMessageEvent,times: int):
-        try:
-            await asyncio.sleep(times)
-        except asyncio.CancelledError:
-            chain = event.chain_result([Comp.Plain(f"已取消抽奖")])
-            with open("msggroup.json", "r") as f:
-                msgg = json.load(f)
-            for i in msgg:
-                await self.context.send_message(i,event.chain_result(chain))
-            if event.unified_msg_origin not in msgg:
-                await self.context.send_message(event.unified_msg_origin,event.chain_result(chain))
-            return
-        logger.info("已等待{}秒".format(times))
-        await LotteryPlugin.Lotterystart(self, event)
-        # yield event.chain_result([Comp.Plain(f"1开始等待{times}秒")])
-        # await asyncio.sleep(times)
-        # yield event.chain_result([Comp.Plain(f"已等待{times}秒")])
-        # task = asyncio.create_task(timed_task(event,times))
+    # async def timeout(self, event: AstrMessageEvent,times: int):
+    #     try:
+    #         await asyncio.sleep(times)
+    #     except asyncio.CancelledError:
+    #         chain = event.chain_result([Comp.Plain(f"已取消抽奖")])
+    #         with open("msggroup.json", "r") as f:
+    #             msgg = json.load(f)
+    #         for i in msgg:
+    #             await self.context.send_message(i,event.chain_result(chain))
+    #         if event.unified_msg_origin not in msgg:
+    #             await self.context.send_message(event.unified_msg_origin,event.chain_result(chain))
+    #         return
+    #     logger.info("已等待{}秒".format(times))
+    #     await LotteryPlugin.Lotterystart(self, event)
+    #     # yield event.chain_result([Comp.Plain(f"1开始等待{times}秒")])
+    #     # await asyncio.sleep(times)
+    #     # yield event.chain_result([Comp.Plain(f"已等待{times}秒")])
+    #     # task = asyncio.create_task(timed_task(event,times))
     
     # @filter.permission_type(filter.PermissionType.ADMIN)
     # @filter.command("开始抽奖")
@@ -278,5 +279,6 @@ class LotteryPlugin(Star):
 
     async def terminate(self):
         """可选择实现异步的插件销毁方法，当插件被卸载/停用时会调用。"""
+        self.task.cancel()
         self.task = None
         
