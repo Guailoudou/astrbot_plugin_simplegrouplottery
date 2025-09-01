@@ -133,10 +133,12 @@ class LotteryPlugin(Star):
                         i["runned"] = True
                         newtime = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
                         newtime = int(newtime)
+                        logger.info(f"newtime:{newtime} time:{i['time']}")
                         if i["time"] < newtime:
                             await self.Lotterystart(self)
                             self.task_data.clear
                             await self.save("task")
+            logger.info("检查任务完成")
             await asyncio.sleep(1)
 
     @filter.permission_type(filter.PermissionType.ADMIN)
