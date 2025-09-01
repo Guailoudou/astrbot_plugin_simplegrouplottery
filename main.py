@@ -13,7 +13,7 @@ class LotteryPlugin(Star):
         self.group_file = self.data_dir / r"msggroup.json"
         self.task_file = self.data_dir / r"task.json"
         self.winlist_file = self.data_dir / r"winlist.json"
-        self.qqs_data = []
+        self.qqs_data = {}
         self.group_data = []
         self.task_data = []
         self.winlist_data = []
@@ -29,7 +29,7 @@ class LotteryPlugin(Star):
         """数据初始化"""
         if not self.qqs_file.exists():
             with open(self.qqs_file, "w") as f:
-                json.dump([], f)
+                json.dump({}, f)
         if not self.group_file.exists():
             with open(self.group_file, "w") as f:
                 json.dump([], f)
