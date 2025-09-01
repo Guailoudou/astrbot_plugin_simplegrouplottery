@@ -128,17 +128,15 @@ class LotteryPlugin(Star):
         """隔1s检查一次是否有过时间但未激活的任务"""
         while True:
             for i in self.task_data:
-                if not i["runned"]:
-                    if i["time"] < time.time():
+                if not i["runned"]:           
+                    newtime = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
+                    newtime = int(newtime)
+                    logger.info(f"newtime:{newtime} time:{i['time']}")
+                    if i["time"] < newtime:
                         i["runned"] = True
-                        newtime = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-                        newtime = int(newtime)
-                        logger.info(f"newtime:{newtime} time:{i['time']}")
-                        if i["time"] < newtime:
-                            await self.Lotterystart(self)
-                            self.task_data.clear
-                            await self.save("task")
-            logger.info("检查任务完成")
+                        await self.Lotterystart(self)
+                        self.task_data.clear
+                        await self.save("task")
             await asyncio.sleep(1)
 
     @filter.permission_type(filter.PermissionType.ADMIN)
