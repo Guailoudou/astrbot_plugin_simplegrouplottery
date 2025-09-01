@@ -168,9 +168,9 @@ class LotteryPlugin(Star):
     #     # yield event.chain_result([Comp.Plain(f"已等待{times}秒")])
     #     # task = asyncio.create_task(timed_task(event,times))
     
-    # @filter.permission_type(filter.PermissionType.ADMIN)
-    # @filter.command("开始抽奖")
-    async def Lotterystart(self):
+    @filter.permission_type(filter.PermissionType.ADMIN)
+    @filter.command("开始抽奖")
+    async def Lotterystart(self,event: AstrMessageEvent = None):
         logger.info("开始抽奖")
         # yield event.chain_result([Comp.Plain(f"将在{times}秒")])
         # await asyncio.sleep(times)
