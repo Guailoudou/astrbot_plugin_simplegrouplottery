@@ -136,7 +136,7 @@ class LotteryPlugin(Star):
                         logger.info("开始执行任务")
                         i["runned"] = True
                         await self.Lotterystart(self)
-                        self.task_data.clear
+                        await self.task_data.clear
                         await self.save("task")
             await asyncio.sleep(2)
 
