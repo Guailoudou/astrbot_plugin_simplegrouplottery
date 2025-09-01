@@ -194,7 +194,7 @@ class LotteryPlugin(Star):
         })
         await self.save("winlist")
 
-        msgg = self.msggroup_data
+        msgg = self.group_data
         for i in msgg:
             await self.context.send_message(i,MessageChain(chain))
         
