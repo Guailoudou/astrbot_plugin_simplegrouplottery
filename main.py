@@ -173,8 +173,8 @@ class LotteryPlugin(Star):
     async def Lotterystart(self,event: AstrMessageEvent = None):
         logger.info("开始抽奖")
         # yield event.chain_result([Comp.Plain(f"将在{times}秒")])
-        # await asyncio.sleep(times)
-        code = self.qqs_datas
+        # await asyncio.sleep(times\
+        code = self.qqs_data
         length = len(code)
         num = random.randint(0, length - 1)
         info = list(code.items())[num]
