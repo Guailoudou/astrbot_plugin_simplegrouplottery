@@ -204,16 +204,16 @@ class LotteryPlugin(Star):
     async def timestart(self, event: AstrMessageEvent,times: int):
         # times = 20250903200000
         logger.info(times)
+        if len(self.task_data) >= 1:
+            yield event.plain_result("已有定时抽奖任务，如果需要更改时间，请先取消当前任务，暂不支持多任务")
+            return
         task = {
             "time" : times,
             "runned" : False
         }
         self.task_data.append(task)
         await self.save("task")
-        logger.info("启动定时抽奖")
-        if len(self.task_data) >= 1:
-            yield event.public_reply("已有定时抽奖任务，如果需要更改时间，请先取消当前任务，暂不支持多任务")
-            return
+        
         logger.info("已加入任务")
         times_str = str(times)
         times_str_gsh = times_str[0:4]+"年"+times_str[4:6]+"月"+times_str[6:8]+"日"+times_str[8:10]+"时"+times_str[10:12]+"分"+times_str[12:14]+"秒"
