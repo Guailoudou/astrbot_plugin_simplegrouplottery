@@ -124,8 +124,8 @@ class LotteryPlugin(Star):
         await self.save("group")
         yield event.chain_result([Comp.Plain("删除成功")])
 
-    async def tick(self,event: AstrMessageEvent):
-        """隔5min检查一次是否有过时间但未激活的任务"""
+    async def tick(self):
+        """隔1s检查一次是否有过时间但未激活的任务"""
         while True:
             for i in self.task_data:
                 if not i["runned"]:
@@ -136,7 +136,7 @@ class LotteryPlugin(Star):
                             await self.Lotterystart(self)
                             i["runned"] = True
                             await self.save("task")
-            await asyncio.sleep(60)
+            await asyncio.sleep(1)
 
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("lottery_addgroup")
