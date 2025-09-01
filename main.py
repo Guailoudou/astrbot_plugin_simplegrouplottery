@@ -83,14 +83,14 @@ class LotteryPlugin(Star):
             await self.save("qqs")
         if self.task is not None:
             logger.info("当前存在正在执行的任务")
-        yield event.plain_result(f"用户{message_obj.sender.user_id}参与成功") # 发送一条纯文本消息
+        yield event.plain_result(f"用户{message_obj.sender.user_id}参与成功\n请注意查看参与规则：https://qr18.cn/BFqYTX") # 发送一条纯文本消息
 
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("lottery_getqqs")
     async def getqqs(self, event: AstrMessageEvent):
         """获取QQ列表"""
         chain = [
-            Comp.Plain(f"{self.qqs_data}")
+            Comp.Plain(f"参与人数：{len(self.qqs_data)} \n详细信息{self.qqs_data}")
         ]
         yield event.chain_result(chain)
 
