@@ -137,7 +137,7 @@ class LotteryPlugin(Star):
                         await self.Lotterystart(self)
                         self.task_data.clear
                         await self.save("task")
-            await asyncio.sleep(1)
+            await asyncio.sleep(2)
 
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("lottery_addgroup")
