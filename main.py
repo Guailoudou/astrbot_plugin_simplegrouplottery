@@ -35,7 +35,7 @@ class LotteryPlugin(Star):
                 json.dump([], f)
         if not self.task_file.exists():
             with open(self.task_file, "w") as f:
-                json.dump([], f)
+                json.dump({}, f)
         if not self.winlist_file.exists():
             with open(self.winlist_file, "w") as f:
                 json.dump([], f)
@@ -86,7 +86,7 @@ class LotteryPlugin(Star):
         yield event.plain_result(f"用户{message_obj.sender.user_id}参与成功\n请注意查看参与规则：https://qr18.cn/BFqYTX") # 发送一条纯文本消息
 
     @filter.permission_type(filter.PermissionType.ADMIN)
-    @filter.command("lottery_getqqs")
+    @filter.command("lt_getqqs")
     async def getqqs(self, event: AstrMessageEvent):
         """获取QQ列表"""
         chain = [
@@ -95,7 +95,7 @@ class LotteryPlugin(Star):
         yield event.chain_result(chain)
 
     @filter.permission_type(filter.PermissionType.ADMIN)
-    @filter.command("lottery_rmqq")
+    @filter.command("lt_rmqq")
     async def rmqq(self, event: AstrMessageEvent, qq: str):
         """删除QQ"""
         code = self.qqs_data
@@ -117,7 +117,7 @@ class LotteryPlugin(Star):
         await self.save("qqs")
     
     @filter.permission_type(filter.PermissionType.ADMIN)
-    @filter.command("lottery_rmgroup")
+    @filter.command("lt_rmgroup")
     async def rmgroup(self, event: AstrMessageEvent):
         """删除all开奖源群"""
         self.group_data.clear()
@@ -129,19 +129,19 @@ class LotteryPlugin(Star):
         await asyncio.sleep(2)
         while True:
             for i in self.task_data:
-                if not i["runned"]:           
+                if not i["runned"] and i["start"]:           
                     newtime = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
                     newtime = int(newtime)
                     if i["time"] < newtime:
                         logger.info("开始执行任务")
                         i["runned"] = True
+                        i['start'] = False
                         await self.Lotterystart(self)
-                        self.task_data.remove(i)
                         await self.save("task")
             await asyncio.sleep(1)
 
     @filter.permission_type(filter.PermissionType.ADMIN)
-    @filter.command("lottery_addgroup")
+    @filter.command("lt_addgroup")
     async def addgroup(self,event: AstrMessageEvent):
         """添加开奖源群"""
         self.group_data.append(event.unified_msg_origin)
@@ -170,7 +170,7 @@ class LotteryPlugin(Star):
     
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("开始抽奖")
-    async def Lotterystart(self,event: AstrMessageEvent = None):
+    async def Lotterystart(self,event: AstrMessageEvent = None,name:str = ""):
         logger.info("开始抽奖")
         # yield event.chain_result([Comp.Plain(f"将在{times}秒")])
         # await asyncio.sleep(times\
@@ -178,14 +178,15 @@ class LotteryPlugin(Star):
         length = len(code)
         num = random.randint(0, length - 1)
         info = list(code.items())[num]
+        data = self.task_data.get(name)
         chain = [
             Comp.At(qq=info[0]), 
             Comp.Face(id=144),
             Comp.Plain(f"恭喜你中奖了"),
             Comp.Face(id=144),
             Comp.Plain(f"\n"),
-            Comp.Plain(f" \n中奖信息：\nQQ号：{info[0]}\n用户名：{info[1]}\n奖品：Minecraft: Java & Bedrock Edition for PC × 1\n请于48小时内联系管理员领取奖品，具体领取方式请查看活动信息\n活动具体规则：https://qr18.cn/BFqYTX"),
-            Comp.Image.fromURL("https://file.gldhn.top/img/17559596757340600bcb4e4b8f15c81dbda43b5be19ed.png"),
+            Comp.Plain(f" \n中奖信息：\nQQ号：{info[0]}\n用户名：{info[1]}\n奖品：{data['gift']}\n请于48小时内联系管理员领取奖品，具体领取方式请查看活动信息\n{data['rule']}"),
+            Comp.Image.fromURL(data["imgurl"]),
         ]
         winlist = self.winlist_data
         winlist.append({
@@ -202,27 +203,25 @@ class LotteryPlugin(Star):
 
     
     @filter.permission_type(filter.PermissionType.ADMIN)
-    @filter.command("定时抽奖")
-    async def timestart(self, event: AstrMessageEvent,times: int):
+    @filter.command("启动抽奖")
+    async def timestart(self, event: AstrMessageEvent,name:str):
         # times = 20250903200000
-        logger.info(times)
-        if len(self.task_data) >= 1:
-            yield event.plain_result("已有定时抽奖任务，如果需要更改时间，请先取消当前任务，暂不支持多任务")
-            return
-        task = {
-            "time" : times,
-            "runned" : False
-        }
-        self.task_data.append(task)
-        await self.save("task")
+        data = self.task_data.get(name)
+        if not data:
+            yield event.plain_result("未找到该任务")
         
-        logger.info("已加入任务")
-        times_str = str(times)
+        times_str = str(data["time"])
         times_str_gsh = times_str[0:4]+"年"+times_str[4:6]+"月"+times_str[6:8]+"日"+times_str[8:10]+"时"+times_str[10:12]+"分"+times_str[12:14]+"秒"
         chain = [
-            Comp.Plain(f"已开始抽奖活动，将于{times_str_gsh}开奖\n参与方式：发送 /参与抽奖 \n奖品：Minecraft: Java & Bedrock Edition for PC × 1\n具体领取方式请查看活动信息\n活动具体规则：https://qr18.cn/BFqYTX"),
-            Comp.Image.fromURL("https://file.gldhn.top/img/17559596757340600bcb4e4b8f15c81dbda43b5be19ed.png"),
+            Comp.Plain(f"{data["info"]}将于{times_str_gsh}开奖\n参与方式：发送 /参与抽奖 \n奖品：{data["gift"]}\n具体领取方式请查看活动信息\n{data["rule"]}"),
+            Comp.Image.fromURL(data["imgurl"]),
         ]
+
+        data["start"] = True
+        data["runned"] = False
+
+        self.save("task")
+
         msgg = self.group_data
         for i in msgg:
             await self.context.send_message(i,event.chain_result(chain))
@@ -230,23 +229,44 @@ class LotteryPlugin(Star):
             await self.context.send_message(event.unified_msg_origin,event.chain_result(chain))
         event.stop_event()
     
-    # @filter.permission_type(filter.PermissionType.ADMIN)
-    # @filter.command("setmsggroup")
-    # async def setmsggroup(self, event: AstrMessageEvent):
-    #     if not os.path.exists("msggroup.json"):
-    #         with open("msggroup.json", "w") as f:
-    #             json.dump([], f)
-    #     with open("msggroup.json", "r") as f:
-    #         msgg = json.load(f)
-    #     logger.info(msgg)
-    #     msgg.append(event.unified_msg_origin)
-    #     with open("msggroup.json", "w") as f:
-    #         json.dump(msgg, f)
-        
-    #     yield event.plain_result("已设置该群组为开奖群组")
+    @filter.permission_type(filter.PermissionType.ADMIN)
+    @filter.command("lt_new")
+    async def new(self, event: AstrMessageEvent,name:str,time:int = 0,info:str = "",rule:str = "",gift:str = "",imgurl:str = ""):
+        """新建抽奖活动"""
+        data = {
+            "id": name,
+            "time": time,
+            "info": info,
+            "imgurl": imgurl,
+            "rule": rule,
+            "gift": gift,
+            "start": False,
+            "runned": False
+        }
+        self.task_data[name] = data
+        await self.save("task")
+        yield event.plain_result(f"已成功参加新的抽奖活动：{name}，相关数据：\n{data}")
+        event.stop_event()
 
     @filter.permission_type(filter.PermissionType.ADMIN)
-    @filter.command("lottery_getmsggroup")
+    @filter.command("lt_set")
+    async def set_time(self, event: filter.Event, name: str, type:str ,info: str):
+        data = self.task_data.get(name)
+        if not data: 
+            yield event.plain_result(f"未找到名为{name}的抽奖活动")
+            return
+        if(type == "time"): info = int(info)
+        data[name][type] = info
+        await self.save("task")
+        yield event.plain_result(f"已设置{name}的{type}为{info}")
+
+    @filter.permission_type(filter.PermissionType.ADMIN)
+    @filter.command("lt_get")
+    async def lt_get(self, event: filter.Event):
+        yield event.plain_result(f"当前所有活动：{self.task_data}")
+
+    @filter.permission_type(filter.PermissionType.ADMIN)
+    @filter.command("lt_getmsggroup")
     async def getmsggroup(self, event: AstrMessageEvent):
         """获取开奖群组"""
         msgg = self.group_data

@@ -1,6 +1,12 @@
 [
     {
+        "id": "1",
         "time": "20250101000000",
-        "runned": "false"
+        "info": "",
+        "imgurl": "https://cdn.jsdelivr.net/gh/qr18/qr18@main/img/2021/2021-01-01.png",
+        "rule": "活动具体规则：https://qr18.cn/BFqYTX",
+        "gift": "Minecraft: Java & Bedrock Edition for PC × 1",
+        "start": false,
+        "runned": false
     }
 ]
