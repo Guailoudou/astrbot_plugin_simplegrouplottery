@@ -213,7 +213,7 @@ class LotteryPlugin(Star):
         times_str = str(data["time"])
         times_str_gsh = times_str[0:4]+"年"+times_str[4:6]+"月"+times_str[6:8]+"日"+times_str[8:10]+"时"+times_str[10:12]+"分"+times_str[12:14]+"秒"
         chain = [
-            Comp.Plain(f"{data["info"]}将于{times_str_gsh}开奖\n参与方式：发送 /参与抽奖 \n奖品：{data["gift"]}\n具体领取方式请查看活动信息\n{data["rule"]}"),
+            Comp.Plain(f"{data['info']}将于{times_str_gsh}开奖\n参与方式：发送 /参与抽奖 \n奖品：{data['gift']}\n具体领取方式请查看活动信息\n{data['rule']}"),
             Comp.Image.fromURL(data["imgurl"]),
         ]
 
