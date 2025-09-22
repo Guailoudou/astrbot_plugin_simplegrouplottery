@@ -250,7 +250,7 @@ class LotteryPlugin(Star):
 
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("lt_set")
-    async def set_time(self, event: filter.Event, name: str, type:str ,info: str):
+    async def set_time(self, event: AstrMessageEvent, name: str, type:str ,info: str):
         data = self.task_data.get(name)
         if not data: 
             yield event.plain_result(f"未找到名为{name}的抽奖活动")
@@ -262,7 +262,7 @@ class LotteryPlugin(Star):
 
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("lt_get")
-    async def lt_get(self, event: filter.Event):
+    async def lt_get(self, event: AstrMessageEvent):
         yield event.plain_result(f"当前所有活动：{self.task_data}")
 
     @filter.permission_type(filter.PermissionType.ADMIN)
