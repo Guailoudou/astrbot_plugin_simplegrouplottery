@@ -130,7 +130,7 @@ class LotteryPlugin(Star):
         await asyncio.sleep(2)
         while True:
             for i in self.task_data.values():
-                logger.info(f"检查任务:{i['name']}")
+                logger.info(f"检查任务:{i['id']}")
                 if not i["runned"] and i["start"]:
                     logger.info("开始判断时间")
                     newtime = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
