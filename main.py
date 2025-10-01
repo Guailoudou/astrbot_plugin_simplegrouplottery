@@ -128,7 +128,7 @@ class LotteryPlugin(Star):
         """隔1s检查一次是否有过时间但未激活的任务"""
         await asyncio.sleep(2)
         while True:
-            for i in self.task_data:
+            for i in self.task_data.values():
                 logger.info(f"检查任务:{i}")
                 if not i["runned"] and i["start"]:
                     logger.info("开始判断时间")
