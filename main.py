@@ -231,7 +231,7 @@ class LotteryPlugin(Star):
     
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("lt_new")
-    async def new(self, event: AstrMessageEvent,name:int,time:int = 0,info:str = "",rule:str = "",gift:str = "",imgurl:str = ""):
+    async def new(self, event: AstrMessageEvent,name:str,time:int = 0,info:str = "",rule:str = "",gift:str = "",imgurl:str = ""):
         """新建抽奖活动"""
         data = {
             "id": name,
