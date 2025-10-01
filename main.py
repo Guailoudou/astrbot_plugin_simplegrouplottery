@@ -174,7 +174,7 @@ class LotteryPlugin(Star):
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("开始抽奖")
     async def Lotterystart(self,event: AstrMessageEvent = None,name:str = ""):
-        logger.info("开始抽奖")
+        logger.info(f"开始抽奖: {name}")
         # yield event.chain_result([Comp.Plain(f"将在{times}秒")])
         # await asyncio.sleep(times\
         code = self.qqs_data
