@@ -231,7 +231,7 @@ class LotteryPlugin(Star):
     
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("lt_new")
-    async def new(self, event: AstrMessageEvent,name:str,time:int = 0,info:str = "",rule:str = "",gift:str = "",imgurl:str = ""):
+    async def new(self, event: AstrMessageEvent,name:int,time:int = 0,info:str = "",rule:str = "",gift:str = "",imgurl:str = ""):
         """新建抽奖活动"""
         data = {
             "id": name,
@@ -251,6 +251,7 @@ class LotteryPlugin(Star):
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("lt_set")
     async def set_time(self, event: AstrMessageEvent, name: str, type:str ,info: str):
+        """type:time(%Y%m%d%H%M%S),info,imgurl,rule,gift"""
         data = self.task_data.get(name)
         if not data: 
             yield event.plain_result(f"未找到名为{name}的抽奖活动")
@@ -284,6 +285,24 @@ class LotteryPlugin(Star):
                 Comp.Plain(f"{winlist}")
             ]
         yield event.chain_result(chain)
+    
+    @filter.permission_type(filter.PermissionType.ADMIN)
+    @filter.command("lt_help")
+    async def help(self, event: AstrMessageEvent):
+        """详细帮助"""
+        help = """lt_new name time info rule gift imgurl
+lt_set name [time:%Y%m%d%H%M%S info:str rule:str gift:str imgurl:str] info
+lt_get
+lt_getmsggroup
+lt_start name
+# lt_stop
+lt_help
+lt_getwinlist"""
+        chain = [
+            Comp.Plain(f"{help}"),
+        ]
+        yield event.chain_result(chain)
+
     
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("取消抽奖")
