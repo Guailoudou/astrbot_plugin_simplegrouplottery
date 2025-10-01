@@ -257,7 +257,7 @@ class LotteryPlugin(Star):
             yield event.plain_result(f"未找到名为{name}的抽奖活动")
             return
         if(type == "time"): info = int(info)
-        data[name][type] = info
+        data[type] = info
         await self.save("task")
         yield event.plain_result(f"已设置{name}的{type}为{info}")
 
