@@ -83,7 +83,7 @@ class LotteryPlugin(Star):
             await self.save("qqs")
         if self.task is not None:
             logger.info("当前存在正在执行的任务")
-        yield event.plain_result(f"用户{message_obj.sender.user_id}参与成功\n请注意查看参与规则：https://qr18.cn/BFqYTX") # 发送一条纯文本消息
+        yield event.plain_result(f"用户{message_obj.sender.user_id}参与成功\n请注意查看参与规则") # 发送一条纯文本消息
 
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("lt_getqqs")
@@ -129,9 +129,12 @@ class LotteryPlugin(Star):
         await asyncio.sleep(2)
         while True:
             for i in self.task_data:
-                if not i["runned"] and i["start"]:           
+                logger.info("检查一次任务")
+                if not i["runned"] and i["start"]:
+                    logger.info("开始判断时间")
                     newtime = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
                     newtime = int(newtime)
+                    logger.info(f"当前时间为 {newtime}")
                     if i["time"] < newtime:
                         logger.info("开始执行任务")
                         i["runned"] = True
@@ -318,6 +321,6 @@ lt_getwinlist"""
 
     async def terminate(self):
         """可选择实现异步的插件销毁方法，当插件被卸载/停用时会调用。"""
-        await self.task.cancel()
+        _ = await self.task.cancel()
         self.task = None
         
