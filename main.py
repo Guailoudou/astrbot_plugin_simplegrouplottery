@@ -143,11 +143,14 @@ class LotteryPlugin(Star):
 
     @filter.permission_type(filter.PermissionType.ADMIN)
     @filter.command("lt_addgroup")
-    async def addgroup(self,event: AstrMessageEvent):
+    async def addgroup(self,event: AstrMessageEvent,group: str = None):
         """添加开奖源群"""
-        self.group_data.append(event.unified_msg_origin)
+        if group is None:
+            self.group_data.append(event.unified_msg_origin)
+        else:
+            self.group_data.append("aiocqhttp:GroupMessage:"+group)
         await self.save("group")
-        yield event.plain_result("已设置该群组为开奖群组")
+        yield event.plain_result(f"已设置该群组为开奖群组，当前开奖群组有：{self.group_data}")
 
 
     # async def timeout(self, event: AstrMessageEvent,times: int):
